@@ -25,7 +25,7 @@ required.
 
 ### 🎥 PoC Demonstration Video
 
-**[`ARIA_POC.mp4`](ARIA_POC.mp4)** — a real recording of the closed loop
+**[`ARIA_POC.mp4`](ARIA_POC.mp4)** (in this repo) or **[watch in higher clarity on Google Drive](https://drive.google.com/file/d/1IYqwbd6-34krWnfrM6aGJ7QtKXvW-att/view?usp=share_link)** — a real recording of the closed loop
 in action: live sensor data leaving EnergyPlus, the request going to
 qwen2.5:3b, and the resulting control actions being written back before
 the next tick, narrated directly in the terminal.
@@ -421,7 +421,7 @@ EnergyPlus · Ollama (qwen2.5:3b) · Python · Streamlit · Plotly · SQLite · 
 | Document                                                            | What it covers                                                                          |
 | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
 | [Live Dashboard](https://aria-autonomous-reasoning-intelligent-actuator.streamlit.app) | The real 7-day run, hosted — no setup required                     |
-| [`ARIA_POC.mp4`](ARIA_POC.mp4)                                     | PoC demo video — the closed loop running live, EnergyPlus to LLM to control action      |
+| [`ARIA_POC.mp4`](ARIA_POC.mp4) / [Drive (higher clarity)](https://drive.google.com/file/d/1IYqwbd6-34krWnfrM6aGJ7QtKXvW-att/view?usp=share_link) | PoC demo video — the closed loop running live, EnergyPlus to LLM to control action      |
 | [`README.md`](README.md)                                           | This file — full project overview, setup, and results                                  |
 | [`ARCHITECTURE.md`](ARCHITECTURE.md)                               | System flow diagram, component design, and the real 7-day run (6h 40m continuous)       |
 | [`TESTING.md`](TESTING.md)                                         | Test suite, real failures found and fixed, and what the long run actually stress-tested |
