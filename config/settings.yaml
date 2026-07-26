@@ -1,0 +1,52 @@
+energyplus:
+  model_path: "simulation/models/SmallOffice.idf"
+  weather_path: "simulation/models/Chicago.epw"
+  output_dir: "output/aria"
+  baseline_output_dir: "output/baseline"
+  timestep_per_hour: 4              # 15-minute intervals → 96 timesteps/day
+  run_period_start: "07/01"         # July 1  (MM/DD — EnergyPlus format)
+  run_period_end:   "07/07"         # July 7  (672 timesteps total at 4/hr)
+
+llm:
+  model: "qwen2.5:3b"
+  host: "http://localhost:11434"
+  temperature: 0.1                  # near-deterministic for control decisions
+  timeout_seconds: 45               # fallback triggers after this
+  max_tool_iterations: 10           # max LLM round-trips per timestep
+  fallback_on_failure: true
+
+safety:
+  # Occupied bounds (ASHRAE 55 comfort zone)
+  cooling_sp_min_occupied:   20.0
+  cooling_sp_max_occupied:   26.0
+  heating_sp_min_occupied:   20.0
+  heating_sp_max_occupied:   24.0
+  # Unoccupied bounds (wider range, favors energy savings over comfort)
+  cooling_sp_min_unoccupied: 26.0
+  cooling_sp_max_unoccupied: 32.0
+  heating_sp_min_unoccupied: 15.0
+  heating_sp_max_unoccupied: 20.0
+  # Ramp-rate limit — prevents thermal shock
+  max_setpoint_delta: 2.0           # °C max change per 15-min cycle
+  # IAQ
+  co2_alarm_ppm: 1000               # ASHRAE 62.1
+  # Lighting
+  min_lighting_fraction_occupied: 0.2
+
+carbon:
+  api_key: ""                       # blank → use time-of-day mock
+  region: "US-MIDA-PJM"            # PJM grid (covers Chicago)
+  high_threshold_gco2_kwh: 350     # defer non-essential cooling above this
+  low_threshold_gco2_kwh: 120      # pre-cool aggressively below this
+
+targets:
+  daily_energy_budget_kwh: 200
+  daily_carbon_budget_kg: 80
+
+database:
+  path: "aria.db"
+
+dashboard:
+  port: 8501
+  refresh_interval_seconds: 30
+  title: "ARIA — Eco-Loop Building Agent"

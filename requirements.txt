@@ -1,0 +1,27 @@
+# Dashboard
+streamlit>=1.39.0
+plotly>=5.24.0
+pandas>=2.2.0
+watchdog>=4.0.0
+
+# LLM
+ollama>=0.3.3
+
+# Config
+pyyaml>=6.0.0
+
+# IDF post-run export (Phase 13)
+eppy>=0.5.68
+
+# Utilities
+requests>=2.32.0
+
+# Testing
+pytest>=8.0.0
+pytest-cov>=5.0.0
+
+# NOTE: pyenergyplus is NOT on PyPI
+# It ships with the EnergyPlus application installer at:
+#   /Applications/EnergyPlus-26-1-0/pyenergyplus
+# setup.sh writes ENERGYPLUS_DIR to .aria_env
+# config/env_loader.py reads it before any import

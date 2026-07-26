@@ -1,0 +1,37 @@
+# ── Python ────────────────────────────────
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# ── Environment (machine-specific) ────────
+.aria_env
+
+# ── Database ───────────────────────────────
+# aria.db is intentionally tracked: it holds the real, completed 7-day
+# baseline + ARIA run (672 decisions, 6h40m of real LLM inference) so
+# the dashboard shows real results immediately after a clone, without
+# requiring a multi-hour re-run. Only the WAL/SHM journal files (runtime-
+# only, regenerated automatically) are ignored.
+aria.db-shm
+aria.db-wal
+
+# ── EnergyPlus output (generated) ─────────
+output/
+
+# ── OS ────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+
+# ── IDE ───────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
