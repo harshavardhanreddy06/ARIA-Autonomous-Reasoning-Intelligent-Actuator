@@ -69,3 +69,13 @@ in this repository, for quick reviewer verification.
 | Handling lengthy simulation logs | [Handling Lengthy Simulation Logs](docs/ARCHITECTURE.md#handling-lengthy-simulation-logs) |
 
 Companion documents with deeper/broader coverage: [`ARCHITECTURE.md`](ARCHITECTURE.md) (root — system flow diagram, component design), [`docs/TESTING.md`](docs/TESTING.md) (verification methodology), [`docs/CHALLENGES.md`](docs/CHALLENGES.md) (13 real incidents found and fixed).
+
+---
+
+## 5. PoC Demonstration Video
+
+> A maximum 3-minute video recording showing the loop in action —
+> highlighting data transferring live from EnergyPlus to the LLM and the
+> subsequent control actions updating the model parameters automatically.
+
+**[`ARIA_POC.mp4`](ARIA_POC.mp4)** — 2 minutes 41 seconds, real recording (not staged/scripted output): live sensor data leaving EnergyPlus, the request going to qwen2.5:3b, and the resulting control actions being written back to the building before the next tick. Supporting scripts used to produce this demo: [`scripts/loop.py`](scripts/loop.py) (isolated agentic tool-calling loop, 4 real LLM calls across a full occupancy arc) and [`scripts/fixed_loop.py`](scripts/fixed_loop.py) (the real closed EnergyPlus ↔ LLM loop, narrated live in the terminal).
