@@ -1,6 +1,7 @@
 # ARIA — Autonomous Reasoning & Intelligent Actuator
 
 ### Eco-Loop Building Agent · Honeywell Hackathon 2026
+
 **Prepared by Konepalli Harshavardhan**
 
 ARIA is an AI building management agent that autonomously controls a
@@ -14,6 +15,13 @@ There is no cloud dependency anywhere in the control loop: the simulation,
 the language model, and the database are all local. ARIA reads sensor data,
 reasons about it, acts on the building, and explains itself — every single
 cycle, with a guaranteed audit trail.
+
+### 🔴 Live Dashboard
+
+**[aria-autonomous-reasoning-intelligent-actuator.streamlit.app](https://aria-autonomous-reasoning-intelligent-actuator.streamlit.app)**
+— the real, completed 7-day run, live: energy comparison, the comfort
+heatmap, savings, and the full 672-decision reasoning log, no setup
+required.
 
 ### 📖 Read next
 
@@ -31,14 +39,14 @@ specific parts of the story, both in this same root folder:
 
 ### At a glance
 
-| | |
-|---|---|
-| **Energy reduction, 7-day run** | **-15.9%** vs. no-AI baseline (-20.1% during occupied hours) |
-| **Decision cycles completed** | **672 / 672** — 99.3% LLM-authored |
-| **Continuous real run duration** | **6 hours 40 minutes**, zero crashes, zero restarts |
-| **Safety violations** | **0** — never left the hard temperature envelope, ever |
-| **Automated tests** | **60 / 60** passing |
-| **Cloud dependency** | **None** — simulation, LLM, and database are all local |
+|                                        |                                                                    |
+| -------------------------------------- | ------------------------------------------------------------------ |
+| **Energy reduction, 7-day run**  | **-15.9%** vs. no-AI baseline (-20.1% during occupied hours) |
+| **Decision cycles completed**    | **672 / 672** — 99.3% LLM-authored                          |
+| **Continuous real run duration** | **6 hours 40 minutes**, zero crashes, zero restarts          |
+| **Safety violations**            | **0** — never left the hard temperature envelope, ever      |
+| **Automated tests**              | **60 / 60** passing                                          |
+| **Cloud dependency**             | **None** — simulation, LLM, and database are all local      |
 
 ---
 
@@ -67,12 +75,12 @@ function-calling API — no JSON-RPC layer, no external protocol surface.
 
 Four tools, deliberately minimal:
 
-| Tool | Purpose |
-|---|---|
-| `set_hvac_setpoint` | Cooling/heating setpoints for one or more zones |
-| `set_lighting_level` | Lighting fraction (0.0-1.0) for one or more zones |
-| `schedule_precool` | Schedule a building-wide precooling event |
-| `log_decision` | Record reasoning and actions taken — required every cycle |
+| Tool                   | Purpose                                                    |
+| ---------------------- | ---------------------------------------------------------- |
+| `set_hvac_setpoint`  | Cooling/heating setpoints for one or more zones            |
+| `set_lighting_level` | Lighting fraction (0.0-1.0) for one or more zones          |
+| `schedule_precool`   | Schedule a building-wide precooling event                  |
+| `log_decision`       | Record reasoning and actions taken — required every cycle |
 
 **Batched calls.** `set_hvac_setpoint` and `set_lighting_level` both accept
 either a single zone or a `zones: [...]` array covering every zone that
@@ -246,6 +254,8 @@ everything else is queried by the dashboard.
 
 ## Dashboard
 
+**Live:** [aria-autonomous-reasoning-intelligent-actuator.streamlit.app](https://aria-autonomous-reasoning-intelligent-actuator.streamlit.app)
+
 A Streamlit + Plotly dashboard reads directly from `aria.db`:
 
 - **Energy** — ARIA vs. baseline building demand over time, plus total kWh
@@ -315,10 +325,20 @@ aria/
 
 ## Requirements
 
-- macOS (Apple Silicon recommended)
-- [EnergyPlus](https://energyplus.net) 24.x or 26.x, installed at `/Applications/EnergyPlus-*/`
+- [EnergyPlus](https://energyplus.net) 24.x or 26.x
 - [Ollama](https://ollama.com) installed with `qwen2.5:3b` pulled
 - Python 3.10+
+- A machine capable of running a local LLM continuously — this is the real
+  constraint, not the operating system. The full 7-day, 672-cycle,
+  6-hour-40-minute evaluation run in this repo was executed end-to-end on
+  a MacBook with **8GB of RAM**, and it handled the sustained local
+  inference load without issue. EnergyPlus and Ollama both run on macOS,
+  Windows, and Linux; `config/env_loader.py` resolves the EnergyPlus
+  install path via an `ENERGYPLUS_DIR` environment variable on any of
+  them. `scripts/setup.sh`'s auto-detection currently looks for the
+  default macOS install location (`/Applications/EnergyPlus-*/`) — on
+  Windows/Linux, just set `ENERGYPLUS_DIR` to your install path manually
+  before running it.
 
 ## Quick Start
 
@@ -358,17 +378,17 @@ python3 scripts/export_aria_idf.py
 From a complete, real 7-day run — 672 decision cycles, both ARIA and the
 no-AI baseline simulated against the identical building and weather data.
 
-| Metric | Baseline | ARIA | Change |
-|---|---|---|---|
-| Energy (7 days) | 1251.2 kWh | 1051.8 kWh | **-15.9%** |
-| Energy, occupied hours only | 952.7 kWh | 761.4 kWh | **-20.1%** |
-| PMV compliance, occupied zones | 100.0% | 84.3% | see below |
-| Avg PMV, occupied zones | ~0.0 (fixed schedule) | -0.17 | within [-0.5, +0.5] target |
-| Est. cost saved | — | ~$29.90 | (@ $0.15/kWh, estimate) |
-| Est. CO₂ avoided | — | ~43.7 kg | (@ mock grid average, estimate) |
-| Decisions logged | — | 672 / 672 | 99.3% LLM-authored, 0.74% auto-generated |
-| Absolute safety violations | — | 0 | never left the hard 20-32°C / 15-24°C envelope |
-| Continuous run duration | < 2 sec (pure physics) | **6h 40m** | real, live LLM inference, zero crashes, zero restarts |
+| Metric                         | Baseline               | ARIA                              | Change                                                |
+| ------------------------------ | ---------------------- | --------------------------------- | ----------------------------------------------------- |
+| Energy (7 days)                | 1251.2 kWh             | 1051.8 kWh                        | **-15.9%**                                      |
+| Energy, occupied hours only    | 952.7 kWh              | 761.4 kWh                         | **-20.1%**                                      |
+| PMV compliance, occupied zones | 100.0%                 | 84.3%                             | see below                                             |
+| Avg PMV, occupied zones        | ~0.0 (fixed schedule)  | -0.17                             | within [-0.5, +0.5] target                            |
+| Est. cost saved                | —                     | ~$29.90 | (@ $0.15/kWh, estimate) |                                                       |
+| Est. CO₂ avoided              | —                     | ~43.7 kg                          | (@ mock grid average, estimate)                       |
+| Decisions logged               | —                     | 672 / 672                         | 99.3% LLM-authored, 0.74% auto-generated              |
+| Absolute safety violations     | —                     | 0                                 | never left the hard 20-32°C / 15-24°C envelope      |
+| Continuous run duration        | < 2 sec (pure physics) | **6h 40m**                  | real, live LLM inference, zero crashes, zero restarts |
 
 **On the comfort number, honestly:** the no-AI baseline hits 100% PMV
 compliance because a static schedule is tuned to sit in the safe middle of
@@ -391,12 +411,13 @@ EnergyPlus · Ollama (qwen2.5:3b) · Python · Streamlit · Plotly · SQLite · 
 
 ## Documentation Index
 
-| Document | What it covers |
-|---|---|
-| [`README.md`](README.md) | This file — full project overview, setup, and results |
-| [`ARCHITECTURE.md`](ARCHITECTURE.md) | System flow diagram, component design, and the real 7-day run (6h 40m continuous) |
-| [`TESTING.md`](TESTING.md) | Test suite, real failures found and fixed, and what the long run actually stress-tested |
-| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Deeper technical architecture notes |
-| [`docs/TESTING.md`](docs/TESTING.md) | Full phase-by-phase build and verification log |
-| [`docs/CHALLENGES.md`](docs/CHALLENGES.md) | All 13 real incidents, narrated in full detail |
-| [`ARIA_Project_Documentation.pdf`](ARIA_Project_Documentation.pdf) | Single-file corporate-style project report |
+| Document                                                            | What it covers                                                                          |
+| ------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| [Live Dashboard](https://aria-autonomous-reasoning-intelligent-actuator.streamlit.app) | The real 7-day run, hosted — no setup required                     |
+| [`README.md`](README.md)                                           | This file — full project overview, setup, and results                                  |
+| [`ARCHITECTURE.md`](ARCHITECTURE.md)                               | System flow diagram, component design, and the real 7-day run (6h 40m continuous)       |
+| [`TESTING.md`](TESTING.md)                                         | Test suite, real failures found and fixed, and what the long run actually stress-tested |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)                     | Deeper technical architecture notes                                                     |
+| [`docs/TESTING.md`](docs/TESTING.md)                               | Full phase-by-phase build and verification log                                          |
+| [`docs/CHALLENGES.md`](docs/CHALLENGES.md)                         | All 13 real incidents, narrated in full detail                                          |
+| [`ARIA_Project_Documentation.pdf`](ARIA_Project_Documentation.pdf) | Single-file corporate-style project report                                              |
